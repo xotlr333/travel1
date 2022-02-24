@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>googleMap</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+<body>
+
+<!--google map-->
+<div style="width:400px; float:left;">
+    <div id="googleMap" style="width: 400px; height: 400px;"></div>
+</div>
+
+<!--memo insert-->
+<div style="float:left;">
+    <form name="formInsert" action="googleMapInsert.do" onsubmit="goSubmit();" style="width:390px; margin: 5px;">
+        <div class="form-group">
+            <label for="position">위치</label>
+            <input type="text" name="position" class="form-control" id="position" placeholder="position">
+        </div>
+        <div class="form-group">
+            <label for="FormInput2">제목</label>
+            <input type="text" name="subject" class="form-control" id="FormInput2" placeholder="Subject">
+        </div>
+        <div class="form-group">
+            <label for="FormTextarea1">내용</label>
+            <textarea class="form-control" name="content" id="FormTextarea1" rows="4" placeholder="Content"></textarea>
+        </div>
+        <div class="form-group">
+            <input class="btn btn-primary" type="submit" value="저장">
+        </div>
+    </form>
+</div>
+
+<!--memo list-->
+<div style="clear:both;">
+    <table class="table" style="width: 800px">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">위도</th>
+                <th scope="col">경도</th>
+                <th scope="col">제목</th>
+                <th scope="col">내용</th>
+                <th scope="col">날짜</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.size(list)} > 0" th:each="list : ${list}">
+            <td th:text="${list.id}"></td>
+            <td th:text="${list.lat}"></td>
+            <td th:text="${list.lng}"></td>
+            <td th:text="${list.subject}"></td>
+            <td th:text="${list.content}"></td>
+            <td th:text="${#dates.format(list.reg_date, 'yyyy-MM-dd')}"></td>
+        </tr>
+        <tr th:unless="${#lists.size(list)} > 0">
+            <td colspan="4">조회된 결과가 없습니다.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<input type="hidden" id="listSize" th:value="${#lists.size(list)}">
+
+<!--memo view-->
+<input type="hidden" id="markerButton" class="btn btn-primary" data-toggle="modal" data-target="#memoViewModal">
+
+<div class="modal fade" id="memoViewModal" tabindex="-1" role="dialog" aria-labelledby="memoViewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="memoViewModalLabel"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="subject-text" class="col-form-label">제목:</label>
+                        <input type="text" class="form-control" id="subject-text">
+                    </div>
+                    <div class="form-group">
+                        <label for="content-text" class="col-form-label">내용:</label>
+                        <textarea class="form-control" id="content-text"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="date-text" class="col-form-label">날짜:</label>
+                        <input type="time" class="form-control" id="date-text" >
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Send message</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script th:inline="javascript">
+    var map;
+    //var marker;
+    var seoul = { lat: 37.5642135 ,lng: 127.0016985 };
+    var busan = { lat: 35.1379222, lng: 129.05562775 };
+    const labels = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let labelIndex = 0;
+    var positionArray = [];
+    let markers = [];
+    var beforeMarkerPosition;
+
+   function myMap(){
+
+      //구글지도 옵션
+      var mapOptions = {
+            center:seoul,
+            zoom:7,
+            mapTypeId:google.maps.MapTypeId.ROADMAP
+      };
+
+      //구글지도생성
+      map = new google.maps.Map(
+             document.getElementById("googleMap")
+            , mapOptions );
+
+      //마커 생성
+      //marker = new google.maps.Marker({
+            //position: seoul,
+            //map: map,
+            //label: "서울",
+            //title : "title"
+      //});
+
+      /*[# th:each="list : ${list}"]*/
+      console.log("[[${list.id}]]");
+        var marker = new google.maps.Marker({
+            position: { lat: Number([[${list.lat}]]), lng: Number([[${list.lng}]]) },
+            map: map,
+            label: "[[${list.id}]]",
+            title : [[${list.subject}]]
+      });
+
+      //마커 클릭시 실행
+      marker.addListener("click", () => {
+        console.log("[[${list.id}]]");
+        document.getElementById('subject-text').value = [[${list.subject}]];
+        document.getElementById('content-text').value = [[${list.content}]];
+        //document.getElementById('date-text').value = [[${#dates.format(list.reg_date, 'yyyy-MM-dd')}]];
+        document.getElementById('date-text').value = [[${list.reg_date}]];
+        document.getElementById('markerButton').click();
+      });
+      /*[/]*/
+
+
+      //마커 클릭시 실행
+      //marker.addListener("click", () => {
+      //document.getElementById("position").value = marker.getPosition();
+        //map.setZoom(8);
+        //map.setCenter(marker.getPosition());
+      //});
+
+      //지도 클릭시 마커 추가
+      google.maps.event.addListener(map, "click", (event) => {
+        deleteMarker();
+        addMarker(event.latLng, map);
+        document.getElementById("position").value = event.latLng;
+      });
+
+   }
+
+   function addMarker(location, map) {
+     const marker = new google.maps.Marker({
+        position: location,
+        label: document.getElementById("FormInput2").value,
+        map: map,
+      });
+
+      markers.push(marker);
+   }
+
+   function setMapOnAll(map) {
+      for (let i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+      }
+    }
+
+   function deleteMarker(location, map) {
+        setMapOnAll(null);
+        markers = [];
+   }
+
+   function goSubmit(){
+        alert("저장하였습니다.");
+   }
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHwpx5yXmGRFo2-LL8gGQ5J1nVKLAOvPM&callback=myMap"></script>
+
+<script>
+  $('#memoViewModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget)
+
+  //var modal = $(this)
+  //modal.find('.modal-title').text('New message to ' + recipient)
+  //modal.find('.modal-body input').val(recipient)
+})
+</script>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p th:text="'hello ' + ${name}">hello! empty</p>
+<form name="form1" method="post" action="insert.do">
+    <div style="border : 1px solid red;">
+        insert <br>
+        <input type="text" name="title" PLACEHOLDER="TITLE"><br>
+        <input type="text" name="name" PLACEHOLDER="NAME"><br>
+        <input type="submit">
+    </div>
+</form>
+<form name="form2" method="post" action="modify.do">
+    <div style="border : 1px solid red;">
+        update <br>
+        <input type="text" name="title" PLACEHOLDER="TITLE"><br>
+        <input type="text" name="name" PLACEHOLDER="NAME"><br>
+        <input type="submit">
+    </div>
+</form>
+<form name="form3" method="post" action="delete.do">
+    <div style="border : 1px solid red;">
+        delete <br>
+        <input type="text" name="title" PLACEHOLDER="TITLE"><br>
+        <input type="submit">
+    </div>
+</form>
+
+<table class="board_list">
+    <tr th:if="${#lists.size(list)} > 0" th:each="list : ${list}">
+        <td th:text="${list.title}"></td>
+        <td th:text="${list.name}"></td>
+    </tr>
+    <tr th:unless="${#lists.size(list)} < 0">
+        <td colspan="4">조회된 결과가 없습니다.</td>
+    </tr>
+</table>
+</body>
+</html>
