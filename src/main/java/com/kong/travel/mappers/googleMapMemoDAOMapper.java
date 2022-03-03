@@ -12,6 +12,10 @@ public interface googleMapMemoDAOMapper {
 
     void insertGoogleMapMemoData(googleMapMemoDTO googleMaoMemoDTO);
 
+    void updateGoogleMapMemoData(googleMapMemoDTO googleMaoMemoDTO);
+
+    void deleteGoogleMapMemoData(googleMapMemoDTO googleMapMemoDTO);
+
     List<googleMapMemoDTO> getGoogleMapMemoData();
 
 }

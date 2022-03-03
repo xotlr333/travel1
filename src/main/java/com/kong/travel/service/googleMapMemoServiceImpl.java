@@ -21,4 +21,16 @@ public class googleMapMemoServiceImpl implements googleMapService{
     public void insertGoogleMapMemoData(googleMapMemoDTO googleMapMemoDTO) throws Exception {
         googleMapMemoDAOMapper.insertGoogleMapMemoData(googleMapMemoDTO);
     }
+
+    @Override
+    public void updateGoogleMapMemoData(googleMapMemoDTO googleMapMemoDTO) throws Exception {
+        googleMapMemoDAOMapper.updateGoogleMapMemoData(googleMapMemoDTO);
+    }
+
+    @Override
+    public void deleteGoogleMapMemoData(googleMapMemoDTO googleMapMemoDTO) throws Exception {
+        googleMapMemoDAOMapper.deleteGoogleMapMemoData(googleMapMemoDTO);
+    }
+
+
 }

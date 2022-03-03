@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -96,8 +97,24 @@ public class ViewConnectTestCtl {
         return "redirect:/googleMapTest.do";
     }
 
-    @RequestMapping("/memo_view.do")
-    public String memoView() throws Exception {
-        return "memo_view";
+    @RequestMapping("/googleMapUpdate.do")
+    public String googleMapUpdate(@ModelAttribute googleMapMemoDTO googleMapMemoDTO) throws Exception {
+
+        googleMapService.updateGoogleMapMemoData(googleMapMemoDTO);
+        return "redirect:/googleMapTest.do";
     }
+
+    @RequestMapping("/googleMapDelete.do")
+    public String googleMapDelete(HttpServletRequest request) throws Exception {
+        googleMapMemoDTO googleMapMemoDTO = new googleMapMemoDTO();
+        int id = Integer.parseInt(request.getParameter("id"));
+        googleMapMemoDTO.setId(id);
+        googleMapService.deleteGoogleMapMemoData(googleMapMemoDTO);
+        return "redirect:/googleMapTest.do";
+    }
+
+//    @RequestMapping("/memo_view.do")
+//    public String memoView() throws Exception {
+//        return "memo_view";
+//    }
 }

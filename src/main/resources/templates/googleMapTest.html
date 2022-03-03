@@ -14,7 +14,7 @@
 
 <!--memo insert-->
 <div style="float:left;">
-    <form name="formInsert" action="googleMapInsert.do" onsubmit="goSubmit();" style="width:390px; margin: 5px;">
+    <form name="formInsert" action="googleMapInsert.do" onsubmit="goInsertSubmit();" style="width:390px; margin: 5px;">
         <div class="form-group">
             <label for="position">위치</label>
             <input type="text" name="position" class="form-control" id="position" placeholder="position">
@@ -65,39 +65,40 @@
 
 <!--memo view-->
 <input type="hidden" id="markerButton" class="btn btn-primary" data-toggle="modal" data-target="#memoViewModal">
-
-<div class="modal fade" id="memoViewModal" tabindex="-1" role="dialog" aria-labelledby="memoViewModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="memoViewModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
+<form name="formUpdate" action="googleMapUpdate.do" onsubmit="goUpdateSubmit();">
+    <input type="hidden" id="id" name="id" value="">
+    <div class="modal fade" id="memoViewModal" tabindex="-1" role="dialog" aria-labelledby="memoViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="memoViewModalLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
                     <div class="form-group">
                         <label for="subject-text" class="col-form-label">제목:</label>
-                        <input type="text" class="form-control" id="subject-text">
+                        <input type="text" class="form-control" id="subject-text" name="subject" placeholder="제목">
                     </div>
                     <div class="form-group">
                         <label for="content-text" class="col-form-label">내용:</label>
-                        <textarea class="form-control" id="content-text"></textarea>
+                        <textarea class="form-control" id="content-text" name="content" placeholder="내용"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="date-text" class="col-form-label">날짜:</label>
-                        <input type="time" class="form-control" id="date-text" >
+                        <input type="text" class="form-control" id="date-text" readonly >
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                    <button type="button" class="btn btn-danger" onclick="deleteMemo();">삭제</button>
+                    <button type="submit" class="btn btn-primary">수정</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</form>
 
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -136,7 +137,6 @@
       //});
 
       /*[# th:each="list : ${list}"]*/
-      console.log("[[${list.id}]]");
         var marker = new google.maps.Marker({
             position: { lat: Number([[${list.lat}]]), lng: Number([[${list.lng}]]) },
             map: map,
@@ -146,11 +146,10 @@
 
       //마커 클릭시 실행
       marker.addListener("click", () => {
-        console.log("[[${list.id}]]");
+        document.getElementById('id').value = [[${list.id}]];
         document.getElementById('subject-text').value = [[${list.subject}]];
         document.getElementById('content-text').value = [[${list.content}]];
-        //document.getElementById('date-text').value = [[${#dates.format(list.reg_date, 'yyyy-MM-dd')}]];
-        document.getElementById('date-text').value = [[${list.reg_date}]];
+        document.getElementById('date-text').value = [[${list.reg_date}]].split("T")[0];
         document.getElementById('markerButton').click();
       });
       /*[/]*/
@@ -193,9 +192,18 @@
         markers = [];
    }
 
-   function goSubmit(){
+   function goInsertSubmit(){
         alert("저장하였습니다.");
    }
+   function goUpdateSubmit(){
+        alert("수정하였습니다.");
+   }
+   function deleteMemo(){
+        let thisId = document.getElementById("id").value;
+        alert("삭제하였습니다.");
+        window.location.href = 'googleMapDelete.do?id=' + thisId;
+   }
+
 
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHwpx5yXmGRFo2-LL8gGQ5J1nVKLAOvPM&callback=myMap"></script>

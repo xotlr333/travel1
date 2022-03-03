@@ -10,11 +10,11 @@
         values(#{lat},#{lng}, #{subject}, #{content}, now())
     </insert>
 
-<!--    <update id="updateTestData" parameterType="com.kong.travel.dto.googleMapMemoDTO">-->
-<!--        update DB_TEST set name = #{name} where title = #{title}-->
-<!--    </update>-->
+    <update id="updateGoogleMapMemoData" parameterType="com.kong.travel.dto.googleMapMemoDTO">
+        update googleMapMemo set subject = #{subject}, content = #{content} where id = #{id}
+    </update>
 
-<!--    <delete id="deleteTestData" parameterType="com.kong.travel.dto.googleMapMemoDTO">-->
-<!--        delete from DB_TEST where title = #{title}-->
-<!--    </delete>-->
+    <delete id="deleteGoogleMapMemoData" parameterType="com.kong.travel.dto.googleMapMemoDTO">
+        delete from googleMapMemo where id = #{id}
+    </delete>
 </mapper>
