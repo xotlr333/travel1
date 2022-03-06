@@ -15,7 +15,7 @@ public class Solution {
 //        }
 
         Solution a = new Solution();
-        System.out.println(a.solution("aaAAcccbbbBB"));
+        System.out.println(a.solution(6, new int[]{7,10}));
 //        System.out.println(a.backjoon(first));
 
     }
@@ -42,34 +42,19 @@ public class Solution {
         return answer;
     }
 
-    public String solution(String s) {
-        String answer = "";
-        char[] arr = s.toCharArray();
-        ArrayList<Character> List = new ArrayList<Character>();
-        Arrays.sort(arr);
-        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+    //n = 6, times = {7, 10}
+    public long solution(int n, int[] times) {
+        long answer = 0;
+        int cnt = 0;
+        int i = 0;
+        while(true){
+            if(n == cnt){ break; }
+            for(int j = 0; j < times.length; j++){
 
-        for (int i = 0 ; i < arr.length ; i++){
-            map.put((int) arr[i], map.getOrDefault((int) arr[i], 0)+1);
+            }
         }
 
-        while(!map.isEmpty()){
-            int maxNumber = 0;
-            int maxKey = 0;
-            for(int key : map.keySet()){
-                int value = map.get(key);
-                if(value > maxNumber || (value == maxNumber && maxKey > key)) {
-                    maxNumber = value;
-                    maxKey = key;
-                }
-            }
-            map.remove(maxKey);
-            for(int i =0; i<maxNumber; i++){
-                answer += (char) maxKey + "";
-            }
-
-        }
-            return answer;
+        return answer;
     }
 
 }

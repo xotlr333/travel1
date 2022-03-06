@@ -1,6 +1,7 @@
 package com.kong.travel.controller;
 
 import com.kong.travel.dto.TestDTO;
+import com.kong.travel.dto.FileDTO;
 import com.kong.travel.dto.googleMapMemoDTO;
 import com.kong.travel.mappers.TestDAOMapper;
 import com.kong.travel.mappers.googleMapMemoDAOMapper;
@@ -10,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -113,8 +116,25 @@ public class ViewConnectTestCtl {
         return "redirect:/googleMapTest.do";
     }
 
-//    @RequestMapping("/memo_view.do")
-//    public String memoView() throws Exception {
-//        return "memo_view";
-//    }
+    @RequestMapping("/memo_view.do")
+    public String memoView() throws Exception {
+        return "memo_view";
+    }
+
+    @RequestMapping("/fileUpload.do")
+    public String fileUpload(@RequestParam MultipartFile uploadFile, Model model) throws Exception {
+        List<FileDTO> files = new ArrayList<>();
+
+        if(!uploadFile.isEmpty()) {
+            FileDTO dto = new FileDTO();
+            dto.setFileName(uploadFile.getOriginalFilename());
+            dto.setFileContentType(uploadFile.getContentType());
+            files.add(dto);
+            File newFileName = new File(dto.getId() + "_" + dto.getFileName());
+            uploadFile.transferTo(newFileName);
+        }
+
+        model.addAttribute("files", files);
+        return "redirect:/memo_view.do";
+    }
 }
