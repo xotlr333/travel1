@@ -6,9 +6,14 @@
     </select>
 
     <insert id="insertGoogleMapMemoData" parameterType="com.kong.travel.dto.googleMapMemoDTO">
-        INSERT INTO googleMapMemo(lat, lng, subject, content, reg_date)
-        values(#{lat},#{lng}, #{subject}, #{content}, now())
+        INSERT INTO googleMapMemo(lat, lng, subject, content, filename, filecontenttype, reg_date)
+        values(#{lat},#{lng}, #{subject}, #{content},#{fileName},#{fileContentType}, now())
     </insert>
+
+<!--    <insert id="fileUpload" parameterType="com.kong.travel.dto.FileDTO">-->
+<!--        INSERT INTO file(filename, filecontenttype, reg_date)-->
+<!--        values(#{fileName},#{fileContentType}, now())-->
+<!--    </insert>-->
 
     <update id="updateGoogleMapMemoData" parameterType="com.kong.travel.dto.googleMapMemoDTO">
         update googleMapMemo set subject = #{subject}, content = #{content} where id = #{id}

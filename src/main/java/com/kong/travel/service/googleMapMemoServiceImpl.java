@@ -1,5 +1,6 @@
 package com.kong.travel.service;
 
+import com.kong.travel.dto.FileDTO;
 import com.kong.travel.dto.googleMapMemoDTO;
 import com.kong.travel.mappers.googleMapMemoDAOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,11 @@ public class googleMapMemoServiceImpl implements googleMapService{
     public void deleteGoogleMapMemoData(googleMapMemoDTO googleMapMemoDTO) throws Exception {
         googleMapMemoDAOMapper.deleteGoogleMapMemoData(googleMapMemoDTO);
     }
+
+//    @Override
+//    public void fileUpload(FileDTO FileDTO) throws Exception {
+//        googleMapMemoDAOMapper.fileUpload(FileDTO);
+//    }
 
 
 }

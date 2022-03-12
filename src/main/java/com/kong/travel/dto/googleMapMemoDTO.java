@@ -10,6 +10,9 @@ public class googleMapMemoDTO {
     String lng;
     String subject;
     String content;
+    String fileName;
+    String fileContentType;
+    Date mod_date;
     Date reg_date;
 
     public int getId() {
@@ -58,6 +61,30 @@ public class googleMapMemoDTO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getFileContentType() {
+        return fileContentType;
+    }
+
+    public void setFileContentType(String fileContentType) {
+        this.fileContentType = fileContentType;
+    }
+
+    public Date getMod_date() {
+        return mod_date;
+    }
+
+    public void setMod_date(Date mod_date) {
+        this.mod_date = mod_date;
     }
 
     public Date getReg_date() {

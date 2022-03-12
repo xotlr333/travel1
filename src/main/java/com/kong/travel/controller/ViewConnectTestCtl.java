@@ -8,6 +8,8 @@ import com.kong.travel.mappers.googleMapMemoDAOMapper;
 import com.kong.travel.service.ViewService;
 import com.kong.travel.service.googleMapService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +37,9 @@ public class ViewConnectTestCtl {
     private ViewService viewService;
     @Autowired
     private googleMapService googleMapService;
+
+    @Value("${file.upload.directory}")
+    String filePath;
 
 //    @GetMapping("/list.do")
 //    public String Hello(Model model) {
@@ -87,7 +97,21 @@ public class ViewConnectTestCtl {
     }
 
     @RequestMapping("/googleMapInsert.do")
-    public String googleMapInsert(@ModelAttribute googleMapMemoDTO googleMapMemoDTO) throws Exception {
+    public String googleMapInsert(@ModelAttribute googleMapMemoDTO googleMapMemoDTO, @RequestParam MultipartFile uploadFile) throws Exception {
+        //file upload
+        LocalTime localTime = LocalTime.now();
+        LocalDate localDate = LocalDate.now();
+        String nowDate = localDate.format(DateTimeFormatter.ofPattern("yyyMMdd"));
+        String nowTime = localTime.format(DateTimeFormatter.ofPattern("HHmmss"));
+
+        if(!uploadFile.isEmpty()) {
+            googleMapMemoDTO.setFileName(uploadFile.getOriginalFilename());
+            googleMapMemoDTO.setFileContentType(uploadFile.getContentType());
+            File newFileName = new File(filePath + googleMapMemoDTO.getFileName() + "_" + nowDate + nowTime);
+            uploadFile.transferTo(newFileName);
+        }
+
+        //lat, lng insert
         String position = googleMapMemoDTO.getPosition();
         position = googleMapMemoDTO.getPosition().substring((position.lastIndexOf("(")+1),position.lastIndexOf(")"));
         String[] positionArray = position.split(", ");
@@ -124,13 +148,21 @@ public class ViewConnectTestCtl {
     @RequestMapping("/fileUpload.do")
     public String fileUpload(@RequestParam MultipartFile uploadFile, Model model) throws Exception {
         List<FileDTO> files = new ArrayList<>();
+        LocalTime localTime = LocalTime.now();
+        LocalDate localDate = LocalDate.now();
+        String nowDate = localDate.format(DateTimeFormatter.ofPattern("yyyMMdd"));
+        String nowTime = localTime.format(DateTimeFormatter.ofPattern("HHmmss"));
 
         if(!uploadFile.isEmpty()) {
             FileDTO dto = new FileDTO();
             dto.setFileName(uploadFile.getOriginalFilename());
             dto.setFileContentType(uploadFile.getContentType());
             files.add(dto);
-            File newFileName = new File(dto.getId() + "_" + dto.getFileName());
+            //File newFileName = new File(dto.getId() + "_" + dto.getFileName());
+            File newFileName = new File(filePath + dto.getFileName() + "_" + nowDate + nowTime);
+            //Path path = Paths.get("D:\\Taesik\\springboot\\travel\\files");
+
+            //uploadFile.transferTo(path);
             uploadFile.transferTo(newFileName);
         }
 

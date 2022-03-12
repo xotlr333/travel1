@@ -1,5 +1,6 @@
 package com.kong.travel.mappers;
 
+import com.kong.travel.dto.FileDTO;
 import com.kong.travel.dto.googleMapMemoDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,8 @@ public interface googleMapMemoDAOMapper {
     void updateGoogleMapMemoData(googleMapMemoDTO googleMaoMemoDTO);
 
     void deleteGoogleMapMemoData(googleMapMemoDTO googleMapMemoDTO);
+
+//    void fileUpload(FileDTO FileDTO);
 
     List<googleMapMemoDTO> getGoogleMapMemoData();
 
