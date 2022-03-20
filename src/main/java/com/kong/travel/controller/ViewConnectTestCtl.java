@@ -107,8 +107,9 @@ public class ViewConnectTestCtl {
         if(!uploadFile.isEmpty()) {
             googleMapMemoDTO.setFileName(uploadFile.getOriginalFilename());
             googleMapMemoDTO.setFileContentType(uploadFile.getContentType());
-            File newFileName = new File(filePath + googleMapMemoDTO.getFileName() + "_" + nowDate + nowTime);
+            File newFileName = new File(filePath + nowDate + nowTime + "_" + googleMapMemoDTO.getFileName());
             uploadFile.transferTo(newFileName);
+            googleMapMemoDTO.setFileName(nowDate + nowTime + "_" + googleMapMemoDTO.getFileName());
         }
 
         //lat, lng insert
@@ -159,7 +160,7 @@ public class ViewConnectTestCtl {
             dto.setFileContentType(uploadFile.getContentType());
             files.add(dto);
             //File newFileName = new File(dto.getId() + "_" + dto.getFileName());
-            File newFileName = new File(filePath + dto.getFileName() + "_" + nowDate + nowTime);
+            File newFileName = new File(filePath + nowDate + nowTime + "_" + dto.getFileName() );
             //Path path = Paths.get("D:\\Taesik\\springboot\\travel\\files");
 
             //uploadFile.transferTo(path);

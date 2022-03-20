@@ -57,6 +57,7 @@
                 <th scope="col">경도</th>
                 <th scope="col">제목</th>
                 <th scope="col">내용</th>
+                <th scope="col">파일이름</th>
                 <th scope="col">날짜</th>
             </tr>
         </thead>
@@ -67,6 +68,7 @@
             <td th:text="${list.lng}"></td>
             <td th:text="${list.subject}"></td>
             <td th:text="${list.content}"></td>
+            <td th:text="${list.fileName}"></td>
             <td th:text="${#dates.format(list.reg_date, 'yyyy-MM-dd')}"></td>
         </tr>
         <tr th:unless="${#lists.size(list)} > 0">
@@ -154,7 +156,8 @@
             position: { lat: Number([[${list.lat}]]), lng: Number([[${list.lng}]]) },
             map: map,
             label: "[[${list.id}]]",
-            title : [[${list.subject}]]
+            title : [[${list.subject}]],
+            icon : new google.maps.MarkerImage("images/" + [[${list.fileName}]], null, null, null, new google.maps.Size(30,30))
       });
 
       //마커 클릭시 실행
