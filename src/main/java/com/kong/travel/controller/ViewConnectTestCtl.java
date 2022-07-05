@@ -7,13 +7,20 @@ import com.kong.travel.mappers.TestDAOMapper;
 import com.kong.travel.mappers.googleMapMemoDAOMapper;
 import com.kong.travel.service.ViewService;
 import com.kong.travel.service.googleMapService;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.json.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -23,7 +30,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 @Controller
 public class ViewConnectTestCtl {
@@ -91,8 +100,14 @@ public class ViewConnectTestCtl {
 
     @RequestMapping("/googleMapTest.do")
     public String googleMapView(Model model) throws Exception {
-        List<googleMapMemoDTO> list = googleMapService.getGoogleMapMemoData();
-        model.addAttribute("list",list);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> list2 = restTemplate.getForEntity("http://localhost:8080/api/list.do",String.class);
+        System.out.println(list2.getBody());
+
+//        List<googleMapMemoDTO> list = googleMapService.getGoogleMapMemoData();
+        model.addAttribute("list",list2.getBody());
+//        model.addAttribute("list",list);
         return "googleMapTest";
     }
 
