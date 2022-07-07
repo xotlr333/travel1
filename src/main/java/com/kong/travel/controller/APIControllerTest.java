@@ -6,9 +6,7 @@ import com.kong.travel.service.googleMapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Iterator;
 import java.util.List;
@@ -26,9 +24,10 @@ public class APIControllerTest {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
-//    @ResponseBody
-    @RequestMapping(value = "/helloworld", method = RequestMethod.GET)
-    public String helloworld() {
-        return "helloWorld";
+    @RequestMapping("/api/update.do")
+    public ResponseEntity<String> Update(@RequestBody googleMapMemoDTO dto) throws Exception {
+        googleMapService.updateGoogleMapMemoData(dto);
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
+
 }

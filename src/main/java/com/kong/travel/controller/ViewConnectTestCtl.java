@@ -20,7 +20,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import org.json.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -102,8 +101,8 @@ public class ViewConnectTestCtl {
     public String googleMapView(Model model) throws Exception {
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> list2 = restTemplate.getForEntity("http://localhost:8080/api/list.do",String.class);
-        System.out.println(list2.getBody());
+        ResponseEntity<JSONArray> list2 = restTemplate.getForEntity("http://localhost:8080/api/list.do",JSONArray.class);
+//        System.out.println(list2.getBody());
 
 //        List<googleMapMemoDTO> list = googleMapService.getGoogleMapMemoData();
         model.addAttribute("list",list2.getBody());
@@ -143,7 +142,10 @@ public class ViewConnectTestCtl {
     @RequestMapping("/googleMapUpdate.do")
     public String googleMapUpdate(@ModelAttribute googleMapMemoDTO googleMapMemoDTO) throws Exception {
 
-        googleMapService.updateGoogleMapMemoData(googleMapMemoDTO);
+//        googleMapService.updateGoogleMapMemoData(googleMapMemoDTO);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:8080/api/update.do",googleMapMemoDTO ,String.class);
+        if(!"success".equals(result.getBody())) System.out.println("error");
         return "redirect:/googleMapTest.do";
     }
 
