@@ -69,39 +69,39 @@ public class ViewConnectTestCtl {
 //        mv.addObject("list", list);
 //        return mv;
 //    }
-
-    @RequestMapping("/list.do") //노테이션의 값으로 주소 지정
-    public String List(Model model) throws Exception{
-        //ModelAndView mv = new ModelAndView("/test_view");
-        List<TestDTO> list = viewService.getTestData();
-        model.addAttribute("list",list);
-        //mv.addObject("list", list);
-        return "test_view";
-    }
-
-    @RequestMapping("/insert.do")
-    public String insertTest(@ModelAttribute TestDTO testDTO) throws Exception {
-        viewService.setTestData(testDTO);
-        return "redirect:/list.do";
-    }
-
-    @RequestMapping("/modify.do")
-    public String modifyTest(@ModelAttribute TestDTO testDTO) throws Exception {
-        viewService.updateTestData(testDTO);
-        return "redirect:/list.do";
-    }
-
-    @RequestMapping("/delete.do")
-    public String deleteTest(@ModelAttribute TestDTO testDTO) throws Exception {
-        viewService.deleteTestData(testDTO);
-        return "redirect:/list.do";
-    }
+//
+//    @RequestMapping("/list.do") //노테이션의 값으로 주소 지정
+//    public String List(Model model) throws Exception{
+//        //ModelAndView mv = new ModelAndView("/test_view");
+//        List<TestDTO> list = viewService.getTestData();
+//        model.addAttribute("list",list);
+//        //mv.addObject("list", list);
+//        return "test_view";
+//    }
+//
+//    @RequestMapping("/insert.do")
+//    public String insertTest(@ModelAttribute TestDTO testDTO) throws Exception {
+//        viewService.setTestData(testDTO);
+//        return "redirect:/list.do";
+//    }
+//
+//    @RequestMapping("/modify.do")
+//    public String modifyTest(@ModelAttribute TestDTO testDTO) throws Exception {
+//        viewService.updateTestData(testDTO);
+//        return "redirect:/list.do";
+//    }
+//
+//    @RequestMapping("/delete.do")
+//    public String deleteTest(@ModelAttribute TestDTO testDTO) throws Exception {
+//        viewService.deleteTestData(testDTO);
+//        return "redirect:/list.do";
+//    }
 
     @RequestMapping("/googleMapTest.do")
     public String googleMapView(Model model) throws Exception {
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<JSONArray> list2 = restTemplate.getForEntity("http://localhost:8080/api/list.do",JSONArray.class);
+        ResponseEntity<List> list2 = restTemplate.getForEntity("http://localhost:8080/api/list.do",List.class);
 //        System.out.println(list2.getBody());
 
 //        List<googleMapMemoDTO> list = googleMapService.getGoogleMapMemoData();
@@ -135,7 +135,10 @@ public class ViewConnectTestCtl {
         googleMapMemoDTO.setLat(lat);
         googleMapMemoDTO.setLng(lng);
 
-        googleMapService.insertGoogleMapMemoData(googleMapMemoDTO);
+//        googleMapService.insertGoogleMapMemoData(googleMapMemoDTO);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:8080/api/insert.do",googleMapMemoDTO ,String.class);
+        if(!"success".equals(result.getBody())) System.out.println("insert error");
         return "redirect:/googleMapTest.do";
     }
 
@@ -145,7 +148,7 @@ public class ViewConnectTestCtl {
 //        googleMapService.updateGoogleMapMemoData(googleMapMemoDTO);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:8080/api/update.do",googleMapMemoDTO ,String.class);
-        if(!"success".equals(result.getBody())) System.out.println("error");
+        if(!"success".equals(result.getBody())) System.out.println("update error");
         return "redirect:/googleMapTest.do";
     }
 
@@ -154,37 +157,40 @@ public class ViewConnectTestCtl {
         googleMapMemoDTO googleMapMemoDTO = new googleMapMemoDTO();
         int id = Integer.parseInt(request.getParameter("id"));
         googleMapMemoDTO.setId(id);
-        googleMapService.deleteGoogleMapMemoData(googleMapMemoDTO);
+//        googleMapService.deleteGoogleMapMemoData(googleMapMemoDTO);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> result = restTemplate.postForEntity("http://localhost:8080/api/delete.do",googleMapMemoDTO ,String.class);
+        if(!"success".equals(result.getBody())) System.out.println("delete error");
         return "redirect:/googleMapTest.do";
     }
 
-    @RequestMapping("/memo_view.do")
-    public String memoView() throws Exception {
-        return "memo_view";
-    }
-
-    @RequestMapping("/fileUpload.do")
-    public String fileUpload(@RequestParam MultipartFile uploadFile, Model model) throws Exception {
-        List<FileDTO> files = new ArrayList<>();
-        LocalTime localTime = LocalTime.now();
-        LocalDate localDate = LocalDate.now();
-        String nowDate = localDate.format(DateTimeFormatter.ofPattern("yyyMMdd"));
-        String nowTime = localTime.format(DateTimeFormatter.ofPattern("HHmmss"));
-
-        if(!uploadFile.isEmpty()) {
-            FileDTO dto = new FileDTO();
-            dto.setFileName(uploadFile.getOriginalFilename());
-            dto.setFileContentType(uploadFile.getContentType());
-            files.add(dto);
-            //File newFileName = new File(dto.getId() + "_" + dto.getFileName());
-            File newFileName = new File(filePath + nowDate + nowTime + "_" + dto.getFileName() );
-            //Path path = Paths.get("D:\\Taesik\\springboot\\travel\\files");
-
-            //uploadFile.transferTo(path);
-            uploadFile.transferTo(newFileName);
-        }
-
-        model.addAttribute("files", files);
-        return "redirect:/memo_view.do";
-    }
+//    @RequestMapping("/memo_view.do")
+//    public String memoView() throws Exception {
+//        return "memo_view";
+//    }
+//
+//    @RequestMapping("/fileUpload.do")
+//    public String fileUpload(@RequestParam MultipartFile uploadFile, Model model) throws Exception {
+//        List<FileDTO> files = new ArrayList<>();
+//        LocalTime localTime = LocalTime.now();
+//        LocalDate localDate = LocalDate.now();
+//        String nowDate = localDate.format(DateTimeFormatter.ofPattern("yyyMMdd"));
+//        String nowTime = localTime.format(DateTimeFormatter.ofPattern("HHmmss"));
+//
+//        if(!uploadFile.isEmpty()) {
+//            FileDTO dto = new FileDTO();
+//            dto.setFileName(uploadFile.getOriginalFilename());
+//            dto.setFileContentType(uploadFile.getContentType());
+//            files.add(dto);
+//            //File newFileName = new File(dto.getId() + "_" + dto.getFileName());
+//            File newFileName = new File(filePath + nowDate + nowTime + "_" + dto.getFileName() );
+//            //Path path = Paths.get("D:\\Taesik\\springboot\\travel\\files");
+//
+//            //uploadFile.transferTo(path);
+//            uploadFile.transferTo(newFileName);
+//        }
+//
+//        model.addAttribute("files", files);
+//        return "redirect:/memo_view.do";
+//    }
 }

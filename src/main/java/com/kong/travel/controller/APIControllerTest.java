@@ -30,4 +30,16 @@ public class APIControllerTest {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
+    @RequestMapping("/api/insert.do")
+    public ResponseEntity<String> Insert(@RequestBody googleMapMemoDTO dto) throws Exception {
+        googleMapService.insertGoogleMapMemoData(dto);
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+    @RequestMapping("/api/delete.do")
+    public ResponseEntity<String> Delete(@RequestBody googleMapMemoDTO dto) throws Exception {
+        googleMapService.deleteGoogleMapMemoData(dto);
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
 }
